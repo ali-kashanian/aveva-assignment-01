@@ -43,5 +43,5 @@ jobs:
         ACR_REGISTRY: ${{ vars.ACR_LOGIN_SERVER }}
         IMAGE_TAG: ${{ steps.vars.outputs.hash }}
       run: |
-        docker build . -t $ACR_REGISTRY/aveva-app-dev:$IMAGE_TAG -t $ACR_REGISTRY/aveva-app-dev:latest
-        docker push $ACR_REGISTRY/aveva-app-dev --all-tags
+        docker build . -t $ACR_REGISTRY/aveva-assignment-01:$IMAGE_TAG -t $ACR_REGISTRY/aveva-assignment-01:latest
+        docker push $ACR_REGISTRY/aveva-assignment-01 --all-tags
