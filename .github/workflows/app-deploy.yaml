@@ -69,4 +69,4 @@ jobs:
         ingress: external
         containerAppName: aveva-app-dev
         containerAppEnvironment: aveva-container-app-environment-dev
-        resourceGroup: aveva-rg-dev
+        resourceGroup: aveva-assignment-01
