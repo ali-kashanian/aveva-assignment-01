@@ -6,9 +6,10 @@ on:
       - master
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
+    outputs:
+      hash: ${{ steps.vars.outputs.hash }}
     steps:
     - id: checkout
       name: Checkout code
@@ -45,3 +46,13 @@ jobs:
       run: |
         docker build -f blog-starter.Dockerfile -t $ACR_REGISTRY/aveva-assignment-01:$IMAGE_TAG -t $ACR_REGISTRY/aveva-assignment-01:latest .
         docker push $ACR_REGISTRY/aveva-assignment-01 --all-tags
+
+  deploy-container-to-ACR:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+
+    steps:
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}

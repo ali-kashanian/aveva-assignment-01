@@ -32,4 +32,4 @@ COPY --from=builder /app/public ./public
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "run", "start"]
+CMD ["yarn", "run", "start"]
