@@ -1,0 +1,47 @@
+name: Build and Deploy Aveva Assignment 01 to Azure
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - id: checkout
+      name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: Run install
+      uses: borales/actions-yarn@v4
+      with:
+        cmd: install
+      
+    - name: Build
+      run: yarn build
+
+    - name: Configure Azure ACR
+      uses: azure/docker-login@v2
+      with:
+        login-server: ${{ vars.ACR_LOGIN_SERVER }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - name: Getting commit hash
+      id: vars
+      run: echo "::set-output name=hash::$(git rev-parse --short ${{ github.sha }})"
+
+    - name: Build and push Docker image to ACR
+      env:
+        ACR_REGISTRY: ${{ vars.ACR_LOGIN_SERVER }}
+        IMAGE_TAG: ${{ steps.vars.outputs.hash }}
+      run: |
+        docker build . -t $ACR_REGISTRY/aveva-app-dev:$IMAGE_TAG -t $ACR_REGISTRY/aveva-app-dev:latest
+        docker push $ACR_REGISTRY/aveva-app-dev --all-tags
