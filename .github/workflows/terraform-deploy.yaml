@@ -1,0 +1,35 @@
+name: IaC Terraform Deployment
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: ${{ secrets.GHA_USERNAME }}
+      ARM_CLIENT_SECRET: ${{ secrets.GHA_PASSWORD }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.AZ_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ vars.AZ_TENANT_ID }}
+      TF_VERSION: 1.10.5
+
+    steps:
+    - id: checkout
+      name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.GHA_CREDENTIALS }}
+
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: $TF_VERSION
+
+    - name: Run Terraform Init
+      run: terraform init
+      working-directory: ./iac/

@@ -1,4 +1,4 @@
-name: Build and Deploy Aveva Assignment 01 to Azure
+name: Aveva Assignment 01 Deployment to Azure
 
 on:
   push:
@@ -31,9 +31,9 @@ jobs:
     - name: Configure Azure ACR
       uses: azure/docker-login@v2
       with:
-        login-server: ${{ vars.ACR_LOGIN_SERVER }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        login-server: ${{ vars.AZ_CR_SERVER }}
+        username: ${{ secrets.GHA_USERNAME }}
+        password: ${{ secrets.GHA_PASSWORD }}
 
     - name: Getting commit hash
       id: vars
@@ -41,7 +41,7 @@ jobs:
 
     - name: Build and push Docker image to ACR
       env:
-        ACR_REGISTRY: ${{ vars.ACR_LOGIN_SERVER }}
+        ACR_REGISTRY: ${{ vars.AZ_CR_SERVER }}
         IMAGE_TAG: ${{ steps.vars.outputs.hash }}
       run: |
         docker build -f blog-starter.Dockerfile -t $ACR_REGISTRY/aveva-assignment-01:$IMAGE_TAG -t $ACR_REGISTRY/aveva-assignment-01:latest .
@@ -55,13 +55,13 @@ jobs:
     - name: Login to Azure
       uses: azure/login@v2
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: ${{ secrets.GHA_CREDENTIALS }}
 
     - name: Deploy to Azure Web App
       uses: azure/container-apps-deploy-action@v1
       env:
         IMAGE_TAG: ${{ needs.build-and-deploy.outputs.hash }}
-        ACR_SERVER: ${{ vars.ACR_LOGIN_SERVER }}
+        ACR_SERVER: ${{ vars.AZ_CR_SERVER }}
       with:
         registryUrl: $ACR_SERVER
         imageToDeploy: $ACR_SERVER/aveva-assignment-01:$IMAGE_TAG
