@@ -2,6 +2,8 @@ name: IaC Terraform Deployment
 
 on:
   push:
+    path:
+      - 'iac/**'
     branches:
       - master
 
@@ -43,11 +45,11 @@ jobs:
       working-directory: ./iac/
 
     - name: Run Terraform Plan
-      run: terraform plan -out=tfplan -var "application_name=${{ steps.repo.outputs.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
+      run: terraform plan -var "application_name=${{ steps.repo.outputs.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev" -out=tfplan
       working-directory: ./iac/
 
     - name: Run Terraform Apply
-      run: terraform apply -auto-approve tfplan -var "application_name=${{ steps.repo.outputs.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
+      run: terraform apply -auto-approve tfplan
       working-directory: ./iac/
 
     - name: Notify Failure
