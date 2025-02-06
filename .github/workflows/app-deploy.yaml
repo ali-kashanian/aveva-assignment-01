@@ -21,7 +21,10 @@ jobs:
         node-version: '22.x'
 
     - name: Install Yarn
-      run: corepack enable yarn
+      run: corepack enable yarn && yarn --version
+
+    - name: Install dependencies
+      run: yarn install
       
     - name: Build
       run: yarn build

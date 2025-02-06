@@ -31,11 +31,11 @@ jobs:
         terraform_version: $TF_VERSION
 
     - name: Run Terraform Init
-      run: terraform init -var "application_name=${{ github.repository.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
+      run: terraform init"
       working-directory: ./iac/
 
     - name: Run Terraform Validate
-      run: terraform validate -var "application_name=${{ github.repository.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
+      run: terraform validate"
       working-directory: ./iac/
 
     - name: Run Terraform Plan
