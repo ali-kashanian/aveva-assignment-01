@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  build-and-deploy-to-ACR:
     runs-on: ubuntu-latest
     outputs:
       hash: ${{ steps.vars.outputs.hash }}
@@ -18,12 +18,10 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '22.x'
 
-    - name: Run install
-      uses: borales/actions-yarn@v4
-      with:
-        cmd: install
+    - name: Install Yarn
+      run: corepack enable yarn
       
     - name: Build
       run: yarn build
@@ -42,14 +40,15 @@ jobs:
     - name: Build and push Docker image to ACR
       env:
         ACR_REGISTRY: ${{ vars.AZ_CR_SERVER }}
+        APP_NAME: ${{ github.repository.name }}
         IMAGE_TAG: ${{ steps.vars.outputs.hash }}
       run: |
-        docker build -f blog-starter.Dockerfile -t $ACR_REGISTRY/aveva-assignment-01:$IMAGE_TAG -t $ACR_REGISTRY/aveva-assignment-01:latest .
-        docker push $ACR_REGISTRY/aveva-assignment-01 --all-tags
+        docker build -f blog-starter.Dockerfile -t $ACR_REGISTRY/$APP_NAME:$IMAGE_TAG -t $ACR_REGISTRY/$APP_NAME:latest .
+        docker push $ACR_REGISTRY/$APP_NAME --all-tags
 
-  deploy-container-to-ACR:
+  deploy-to-container:
     runs-on: ubuntu-latest
-    needs: build-and-deploy
+    needs: build-and-deploy-to-ACR
 
     steps:
     - name: Login to Azure
@@ -60,13 +59,14 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/container-apps-deploy-action@v1
       env:
-        IMAGE_TAG: ${{ needs.build-and-deploy.outputs.hash }}
+        IMAGE_TAG: ${{ needs.build-and-deploy-to-ACR.outputs.hash }}
         ACR_SERVER: ${{ vars.AZ_CR_SERVER }}
+        APP_NAME: ${{ github.repository.name }}
       with:
         registryUrl: $ACR_SERVER
-        imageToDeploy: $ACR_SERVER/aveva-assignment-01:$IMAGE_TAG
+        imageToDeploy: $ACR_SERVER/$APP_NAME:$IMAGE_TAG
         targetPort: 3000
         ingress: external
-        containerAppName: aveva-app-dev
-        containerAppEnvironment: aveva-container-app-environment-dev
-        resourceGroup: aveva-assignment-01
+        containerAppName: $APP_NAME-app-dev
+        containerAppEnvironment: $APP_NAME-environment-dev
+        resourceGroup: $APP_NAME

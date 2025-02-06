@@ -7,6 +7,5 @@ resource "azurerm_container_app_environment" "aveva-environment" {
   tags = {
     environment = var.env_id
     src = var.src_key
-    context = var.context_key
   }
 }

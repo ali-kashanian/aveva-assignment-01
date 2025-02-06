@@ -9,6 +9,5 @@ resource "azurerm_container_registry" "aveva-registery" {
   tags = {
     environment = var.env_id
     src = var.src_key
-    context = var.context_key
   }
 }

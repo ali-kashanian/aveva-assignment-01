@@ -31,19 +31,19 @@ jobs:
         terraform_version: $TF_VERSION
 
     - name: Run Terraform Init
-      run: terraform init
+      run: terraform init -var "application_name=${{ github.repository.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
       working-directory: ./iac/
 
     - name: Run Terraform Validate
-      run: terraform validate
+      run: terraform validate -var "application_name=${{ github.repository.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
       working-directory: ./iac/
 
     - name: Run Terraform Plan
-      run: terraform plan -out=tfplan
+      run: terraform plan -out=tfplan -var "application_name=${{ github.repository.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
       working-directory: ./iac/
 
     - name: Run Terraform Apply
-      run: terraform apply -auto-approve tfplan
+      run: terraform apply -auto-approve tfplan -var "application_name=${{ github.repository.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
       working-directory: ./iac/
 
     - name: Notify Failure

@@ -7,7 +7,7 @@ resource "azurerm_container_app" "aveva-app" {
   template {
     container {
       name   = "${var.application_name}-container-${var.env_id}"
-      image  = "docker.io/library/node:lts-alpine"
+      image = "mcr.microsoft.com/k8se/quickstart:latest"
       cpu    = 0.25
       memory = "0.5Gi"
     }
@@ -28,6 +28,5 @@ resource "azurerm_container_app" "aveva-app" {
   tags = {
     environment = var.env_id
     src = var.src_key
-    context = var.context_key
   }
 }

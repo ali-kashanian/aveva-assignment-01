@@ -8,6 +8,5 @@ resource "azurerm_log_analytics_workspace" "aveva-log" {
   tags = {
     environment = var.env_id
     src = var.src_key
-    context = var.context_key
   }
 }

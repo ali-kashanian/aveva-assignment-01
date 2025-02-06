@@ -5,6 +5,5 @@ resource "azurerm_resource_group" "aveva-assignment" {
   tags = {
     environment = var.env_id
     src = var.src_key
-    context = var.context_key
   }
 }
