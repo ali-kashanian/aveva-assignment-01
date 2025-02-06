@@ -3,7 +3,7 @@ name: Aveva Assignment 01 Deployment to Azure
 on:
   push:
     paths-ignore:
-      - 'iac/**'
+      - 'iac/** .github/workflows/terraform-deploy.yaml' 
     branches:
       - master
 

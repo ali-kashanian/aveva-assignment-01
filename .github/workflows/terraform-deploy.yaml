@@ -2,8 +2,8 @@ name: IaC Terraform Deployment
 
 on:
   push:
-    path:
-      - 'iac/**'
+    paths:
+      - 'iac/** .github/workflows/terraform-deploy.yaml'
     branches:
       - master
 
