@@ -2,6 +2,8 @@ name: Aveva Assignment 01 Deployment to Azure
 
 on:
   push:
+    paths-ignore:
+      - 'iac/**'
     branches:
       - master
 
