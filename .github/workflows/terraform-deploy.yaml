@@ -25,6 +25,10 @@ jobs:
       with:
         creds: ${{ secrets.GHA_CREDENTIALS }}
 
+    - name: Getting repository name
+      id: repo
+      run: echo "::set-output name=name::$(echo ${{ github.repository }} | cut -d'/' -f2)"
+
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v3
       with:
@@ -39,11 +43,11 @@ jobs:
       working-directory: ./iac/
 
     - name: Run Terraform Plan
-      run: terraform plan -out=tfplan -var "application_name=${{ github.repository.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
+      run: terraform plan -out=tfplan -var "application_name=${{ steps.repo.outputs.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
       working-directory: ./iac/
 
     - name: Run Terraform Apply
-      run: terraform apply -auto-approve tfplan -var "application_name=${{ github.repository.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
+      run: terraform apply -auto-approve tfplan -var "application_name=${{ steps.repo.outputs.name }}" -var "subscription_id=${{ vars.AZ_SUBSCRIPTION_ID }}" -var "env_id=dev"
       working-directory: ./iac/
 
     - name: Notify Failure
