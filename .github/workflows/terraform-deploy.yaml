@@ -31,11 +31,11 @@ jobs:
         terraform_version: $TF_VERSION
 
     - name: Run Terraform Init
-      run: terraform init"
+      run: terraform init
       working-directory: ./iac/
 
     - name: Run Terraform Validate
-      run: terraform validate"
+      run: terraform validate
       working-directory: ./iac/
 
     - name: Run Terraform Plan
