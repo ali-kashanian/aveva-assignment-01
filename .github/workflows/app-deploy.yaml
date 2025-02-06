@@ -58,13 +58,13 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Deploy to Azure Web App
-      uses: azure/container-apps-deploy-action@v2
+      uses: azure/container-apps-deploy-action@v1
       env:
         IMAGE_TAG: ${{ needs.build-and-deploy.outputs.hash }}
         ACR_SERVER: ${{ vars.ACR_LOGIN_SERVER }}
       with:
-        registryUrl: ${{ env.ACR_SERVER }}
-        imageToDeploy: ${{ env.ACR_SERVER }}/aveva-assignment-01:${{ env.IMAGE_TAG }}
+        registryUrl: $ACR_SERVER
+        imageToDeploy: $ACR_SERVER/aveva-assignment-01:$IMAGE_TAG
         targetPort: 8080
         ingress: external
         containerAppName: aveva-app-dev
