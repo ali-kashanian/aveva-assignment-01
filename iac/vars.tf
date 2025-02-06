@@ -16,13 +16,18 @@ variable "src_key" {
   default     = "terraform"
 }
 
+variable "context_key" {
+  description = "The context key"
+  type        = string
+}
+
 variable "location" {
   description = "The Azure location"
   type        = string
   default     = "West US"
 }
 
-variable "sql_admin_password" {
-  description = "The SQL admin password"
+variable "application_name" {
+  description = "The application name"
   type        = string
 }

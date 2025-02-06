@@ -5,6 +5,13 @@ terraform {
       version = "4.17.0"
     }
   }
+
+  backend "azurerm" {
+    resource_group_name  = "ali-rg-reference"
+    storage_account_name = "alistiac"
+    container_name       = var.application_name
+    key                  = "terraform.tfstate"
+  }
 }  
 
 provider "azurerm" {
