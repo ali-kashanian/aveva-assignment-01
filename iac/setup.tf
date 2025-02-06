@@ -9,7 +9,7 @@ terraform {
   backend "azurerm" {
     resource_group_name  = "ali-rg-reference"
     storage_account_name = "alistiac"
-    container_name       = var.application_name
+    container_name       = "aveva-assignment-01"
     key                  = "terraform.tfstate"
   }
 }  

@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  iac-terraform-deployment:
     runs-on: ubuntu-latest
     env:
       ARM_CLIENT_ID: ${{ secrets.GHA_USERNAME }}
@@ -33,3 +33,19 @@ jobs:
     - name: Run Terraform Init
       run: terraform init
       working-directory: ./iac/
+
+    - name: Run Terraform Validate
+      run: terraform validate
+      working-directory: ./iac/
+
+    - name: Run Terraform Plan
+      run: terraform plan -out=tfplan
+      working-directory: ./iac/
+
+    - name: Run Terraform Apply
+      run: terraform apply -auto-approve tfplan
+      working-directory: ./iac/
+
+    - name: Notify Failure
+      if: failure()
+      run: echo "Terraform deployment failed ${{ github.ref_name }}"
