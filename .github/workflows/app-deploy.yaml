@@ -65,7 +65,7 @@ jobs:
       with:
         registryUrl: $ACR_SERVER
         imageToDeploy: $ACR_SERVER/aveva-assignment-01:$IMAGE_TAG
-        targetPort: 8080
+        targetPort: 3000
         ingress: external
         containerAppName: aveva-app-dev
         containerAppEnvironment: aveva-container-app-environment-dev
